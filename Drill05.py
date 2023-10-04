@@ -6,7 +6,7 @@ TUK_WIDTH, TUK_HEIGHT = 1280, 1024
 
 def load_resourses():
     global TUK_ground, character
-    global  arrow
+    global arrow
     arrow = load_image('hand_arrow.png')
     TUK_ground = load_image('TUK_GROUND.png')
     character = load_image('animation_sheet.png')
@@ -35,10 +35,16 @@ def reset_world():
     frame = 0
     action = 3
 
-    sx, sy = cx, cy # p1 시작점
-    #hx, hy = 50, 50
-    hx, hy = random.randint(0, TUK_WIDTH), random.randint(0, TUK_HEIGHT)    # p2 : 끝 점
-    t=0.0
+    set_new_target_arrow()
+
+
+def set_new_target_arrow():
+    global sx, sy, hx, hy, t
+    sx, sy = cx, cy  # p1 시작점
+    # hx, hy = 50, 50
+    hx, hy = random.randint(0, TUK_WIDTH), random.randint(0, TUK_HEIGHT)  # p2 : 끝 점
+    t = 0.0
+
 
 reset_world()
 
@@ -60,10 +66,14 @@ def update_world():
     frame = (frame + 1) % 8
     action = 1 if cx < hx else 0
 
-    if t<=1.0:
-        cx = (1-t)*sx + t*hx # cx는 시작 x와 끝 x를 1-t:t 비율로 섞은 위치
-        cy = (1-t)*sy + t*hy
-        t+=0.001
+    if t <= 1.0:
+        cx = (1 - t) * sx + t * hx  # cx는 시작 x와 끝 x를 1-t:t 비율로 섞은 위치
+        cy = (1 - t) * sy + t * hy
+        t += 0.001
+    else:
+        cx, cy = hx, hy     # 캐릭터 위치를 목적지 위치와 강제로 정확히 일치시킴
+        set_new_target_arrow()
+
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
 hide_cursor()
